@@ -272,8 +272,10 @@ matches. Misses and hand-offs use the model; `agent.assert`,
   the entry once it settled (`written`, `kept`, or `evicted`), and
   `step.cache.outcomeReason` why it kept or evicted one (`confirmed`,
   `unchanged`, `repaired`, `failed-after-replay`, `not-replaced`,
-  `unconfirmed`). Read it instead of diffing `.e2e/cache/` to find the
-  tests a second pass would re-record.
+  `unconfirmed`). Read it from `.e2e/report.json` instead of diffing
+  `.e2e/cache/` to find the tests a second pass would re-record: the
+  `cache` on an `agent.act()` result is read before the attempt settles,
+  so it carries only `repaired`, `failed-after-replay`, and `not-replaced`.
 - `e2e init` gitignores `.e2e/cache/`; remove that line to commit entries
   and share replays with CI and teammates (CI stays `read-only` unless
   `cache: 'read-write'` is set).

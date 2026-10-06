@@ -909,6 +909,11 @@ describe('StepTraceSession', () => {
     };
     expect(await flushStagedTraces(staged('read-write'), { lastVerifiedStepIndex: 0, implicatesUnconfirmed: false })).toEqual([]);
     expect(await flushStagedTraces(staged('read-only'), { lastVerifiedStepIndex: 5, implicatesUnconfirmed: true })).toEqual([]);
+    const rejecting = staged('read-write');
+    rejecting.store.delete = async () => {
+      throw new Error('EPERM: the entry is still on disk');
+    };
+    expect(await flushStagedTraces(rejecting, { lastVerifiedStepIndex: 0, implicatesUnconfirmed: true })).toEqual([]);
   });
 
   it('takes the step for the live progress on a hit, before the start-path probe, and hands it over only when the model must finish it', async () => {
