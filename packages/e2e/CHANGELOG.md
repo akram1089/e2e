@@ -1,5 +1,13 @@
 # e2e
 
+## 0.18.1
+
+### Patch Changes
+
+- [#929](https://github.com/tester-army/e2e/pull/929) [`e77c17a`](https://github.com/tester-army/e2e/commit/e77c17ae0c1e0ac9a1abadd69b88e31e1cd54baf) Thanks [@okwasniewski](https://github.com/okwasniewski)! - The replay cache key no longer carries the engine's version, so upgrading `@e2e-dev/web` or `@e2e-dev/mobile` keeps every committed recording. A recording re-finds its nodes at replay, which is where a node an engine release resolves differently is caught. Entries recorded before this release sit under the old keys: a `read-write` run records them again, and `--strict-cache` names them as `REPLAY_STALE` until it does.
+
+- [#918](https://github.com/tester-army/e2e/pull/918) [`9fb70b9`](https://github.com/tester-army/e2e/commit/9fb70b9e99a379bda65b404d994a4f7aac9403c6) Thanks [@okwasniewski](https://github.com/okwasniewski)! - A credential whose `username` is not a string, or with a key other than `username` and `password`, fails the config load with `INVALID_CONFIG` naming the field, instead of a raw "value of type function is not JSON-safe" error. Only `password` may be a function. A credential with no username in the config or `E2E_USER_<NAME>_USERNAME` is `INVALID_CONFIG` too.
+
 ## 0.18.0
 
 ### Minor Changes
