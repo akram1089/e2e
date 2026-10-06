@@ -206,7 +206,7 @@ export interface ReportAttempt extends ReportAttemptBase {
   steps: readonly ReportStep[];
   /** What the runner saw when the failure landed; absent on a pass or when nothing could be captured. */
   failure?: FailureEvidence | undefined;
-  /** Why the body skipped itself; present exactly when `status` is `skipped`. */
+  /** Why the body skipped itself; present when `status` is `skipped`, and on a failed attempt that skipped first. */
   skip?: SkipInfo | undefined;
 }
 
@@ -462,7 +462,7 @@ function serializeSerialMember(member: SerialMemberRecord): ReportSerialMember {
     steps: member.steps.map(serializeStep),
     error: member.error === undefined ? undefined : serializeErrorRecord(member.error),
     ...(member.failure === undefined ? {} : { failure: member.failure }),
-    skip: member.status === 'skipped' ? member.skip : undefined,
+    ...(member.skip === undefined ? {} : { skip: member.skip }),
     secondaryErrors: member.secondaryErrors.map(serializeErrorRecord),
   };
 }

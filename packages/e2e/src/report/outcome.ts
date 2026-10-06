@@ -6,6 +6,7 @@
  * (JUnit, markdown) share this one reading.
  */
 
+import type { SkipInfo } from '../collect/select.ts';
 import type { FailureEvidence } from '../run/records.ts';
 import type { ReportError, ReportResult, ReportSerialGroup, ReportStep } from './build.ts';
 
@@ -20,6 +21,8 @@ export interface AttemptView {
   readonly failure: FailureEvidence | undefined;
   /** The attempt's own artifacts; for a serial member, the group attempt's. */
   readonly artifacts: readonly ReportArtifact[];
+  /** Why the body skipped itself; on a failed attempt, a skip the failure outranked. */
+  readonly skip: SkipInfo | undefined;
 }
 
 export interface Outcome {
@@ -36,7 +39,7 @@ export interface Outcome {
 }
 
 /** What a result that never ran an attempt reads as. */
-const NO_ATTEMPT: AttemptView = { status: 'skipped', error: undefined, steps: [], failure: undefined, artifacts: [] };
+const NO_ATTEMPT: AttemptView = { status: 'skipped', error: undefined, steps: [], failure: undefined, artifacts: [], skip: undefined };
 
 export function outcome(result: ReportResult, groups: ReadonlyMap<string, ReportSerialGroup>): Outcome {
   const views = attemptViews(result, groups);
@@ -59,6 +62,7 @@ function attemptViews(result: ReportResult, groups: ReadonlyMap<string, ReportSe
       steps: attempt.steps,
       failure: attempt.failure,
       artifacts: attempt.artifacts,
+      skip: attempt.skip,
     }));
   }
   const attempts = groups.get(result.serialGroupId)?.attempts ?? [];
@@ -70,6 +74,7 @@ function attemptViews(result: ReportResult, groups: ReadonlyMap<string, ReportSe
       steps: member?.steps ?? [],
       failure: member?.failure,
       artifacts: attempt.artifacts,
+      skip: member?.skip,
     };
   });
 }
