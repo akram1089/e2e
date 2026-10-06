@@ -206,7 +206,7 @@ export interface ReportAttempt extends ReportAttemptBase {
   steps: readonly ReportStep[];
   /** What the runner saw when the failure landed; absent on a pass or when nothing could be captured. */
   failure?: FailureEvidence | undefined;
-  /** Why the body skipped itself; present when `status` is `skipped`, and on a failed attempt that skipped first. */
+  /** Why the body skipped itself; present when `status` is `skipped`, and on an attempt that failed after skipping. */
   skip?: SkipInfo | undefined;
 }
 
